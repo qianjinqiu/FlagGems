@@ -204,7 +204,7 @@ def celoss_indices_smooth_kernel(
             1 - label_smoothing + label_smoothing / C,
             label_smoothing / C,
         ).to(tl.float32)
-
+        print("smooth",smooth)
         log = final_sum_max - inp
         _sum += log * smooth * w[:, None]
 
