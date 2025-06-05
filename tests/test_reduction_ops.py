@@ -126,6 +126,7 @@ def test_accuracy_argmin(shape, dim, keepdim, dtype):
 @pytest.mark.CrossEntropyLoss
 def test_accuracy_cross_entropy_loss_indices():
     shape = [3,3]
+    dtype = torch.float16
     dim = 1
     up_limit = shape[dim] - 1
     target_shape = list(shape)
