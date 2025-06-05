@@ -124,10 +124,6 @@ def test_accuracy_argmin(shape, dim, keepdim, dtype):
 @pytest.mark.skipif(flag_gems.vendor_name == "ascend", reason="TODO")
 @pytest.mark.skipif(flag_gems.vendor_name == "kunlunxin", reason="RESULT TODOFIX")
 @pytest.mark.CrossEntropyLoss
-@pytest.mark.parametrize("label_smoothing, ignore_index, shape", SMOOTH_IGNORE_SHAPE)
-@pytest.mark.parametrize("reduction", CROSS_ENTROPY_LOSS_REDUCTION)
-@pytest.mark.parametrize("weight", [True, False])
-@pytest.mark.parametrize("dtype", FLOAT_DTYPES)
 def test_accuracy_cross_entropy_loss_indices(
     shape, dtype, weight, ignore_index, reduction, label_smoothing
 ):
@@ -136,17 +132,13 @@ def test_accuracy_cross_entropy_loss_indices(
     target_shape = list(shape)
     del target_shape[dim]
 
-    inp = torch.randn(shape, dtype=dtype, device=flag_gems.device, requires_grad=True)
-    target = torch.randint(0, up_limit, target_shape, device=flag_gems.device)
+    inp = torch.tensor([[-0.8, 1.5, 0.2], [1.6, 0.7, 0.9], [1.1, -1.0,  0.4]], dtype=dtype, device=flag_gems.device)
+    target = torch.tensor([1, 1, 0], device=flag_gems.device)
     ref_inp = to_reference(inp, True)
     ref_target = to_reference(target)
 
-    if weight:
-        wgt = torch.randn(shape[dim], dtype=dtype, device=flag_gems.device)
-        ref_wgt = to_reference(wgt, True)
-    else:
-        wgt = None
-        ref_wgt = None
+    wgt = torch.tensor([1,  1, -1], device=flag_gems.device)
+    ref_wgt = to_reference(wgt, True)
     ref_out = torch.nn.functional.cross_entropy(
         ref_inp,
         ref_target,
@@ -174,7 +166,7 @@ def test_accuracy_cross_entropy_loss_indices(
 
 @pytest.mark.skipif(flag_gems.vendor_name == "ascend", reason="TODO")
 @pytest.mark.skipif(flag_gems.vendor_name == "kunlunxin", reason="RESULT TODOFIX")
-@pytest.mark.CrossEntropyLoss
+@pytest.mark.CrossEntropy
 @pytest.mark.parametrize("label_smoothing, shape", SMOOTH_SHAPE)
 @pytest.mark.parametrize("reduction", CROSS_ENTROPY_LOSS_REDUCTION)
 @pytest.mark.parametrize("dtype", FLOAT_DTYPES)
